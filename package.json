@@ -6,8 +6,19 @@
         "build": "vite build"
     },
     "devDependencies": {
+        "autoprefixer": "^10.4.20",
         "axios": "^1.6.4",
         "laravel-vite-plugin": "^1.0.0",
+        "tailwindcss": "^3.4.14",
         "vite": "^5.0.0"
+    },
+    "dependencies": {
+        "@inertiajs/inertia": "^0.11.1",
+        "@inertiajs/inertia-react": "^0.8.1",
+        "@vitejs/plugin-react": "^4.3.2",
+        "bootstrap": "^5.3.3",
+        "react": "^18.3.1",
+        "react-bootstrap": "^2.10.5",
+        "react-dom": "^18.3.1"
     }
 }
