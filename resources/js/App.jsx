@@ -1,20 +1,21 @@
-import { createInertiaApp } from '@inertiajs/inertia-react';
-import { createRoot } from 'react-dom/client';  // 使用 createRoot 替代 render
-import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
-import '../css/app.css'; // Import the Tailwind CSS file
+import './bootstrap';
+import '../css/app.css';
 
+import { createRoot } from 'react-dom/client';
+import { createInertiaApp } from '@inertiajs/react';
+import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
+
+const appName = import.meta.env.VITE_APP_NAME || 'Laravel';
 
 createInertiaApp({
-    resolve: (name) => {
-        const path = `./Pages/${name}.jsx`;
-        console.log(`Resolving path: ${path}`);
-        return resolvePageComponent(
-            path,
-            import.meta.glob('./Pages/**/*.jsx')
-        );    
-  },
-  setup({ el, App, props }) {
-    const root = createRoot(el);  // 使用 createRoot 创建根节点
-    root.render(<App {...props} />);  // 渲染组件
-  },
+    title: (title) => `${title} - ${appName}`,
+    resolve: (name) => resolvePageComponent(`./Pages/${name}.jsx`, import.meta.glob('./Pages/**/*.jsx')),
+    setup({ el, App, props }) {
+        const root = createRoot(el);
+
+        root.render(<App {...props} />);
+    },
+    progress: {
+        color: '#4B5563',
+    },
 });
