@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\CheckStatusController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 /*
@@ -13,11 +14,28 @@ use Inertia\Inertia;
 | be assigned to the "web" middleware group. Make something great!
 |
 */
-Route::get('/', function () {
-    return Inertia::render('Home'); // 这里的 'Home' 是你的 home.jsx 组件的名称
+Route::get('/', [CheckStatusController::class, 'checkStatus'])->name('home');
+
+Route::post('/new', [App\Http\Controllers\Auth\RegisterController::class, 'register'])->name('register');
+
+Route::middleware('auth')->group(function () {
+    Route::get('/student', function () {
+        return  Inertia::render('Student');
+    })->name('student')->middleware('CheckRole:student');
+
+    Route::get('/admin', function () {
+        return  Inertia::render('Admin');
+    })->name('admin')->middleware('CheckRole:admin');
+
+    Route::get('/lecture', function () {
+        return  Inertia::render('Lecture');
+    })->name('lecture')->middleware('CheckRole:lecture');
 });
 
+Route::post('/login', [App\Http\Controllers\Auth\LoginController::class, 'redirectTo'])->name('login');
 
-Auth::routes();
+Route::post('/new', [App\Http\Controllers\Auth\RegisterController::class, 'register'])->name('new');
 
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+Route::get('/register', function () {
+    return Inertia::render('Register');
+});

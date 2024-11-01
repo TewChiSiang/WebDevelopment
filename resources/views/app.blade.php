@@ -28,5 +28,6 @@
 </head>
 <body>
     @inertia
+    @csrf
 </body>
 </html>
