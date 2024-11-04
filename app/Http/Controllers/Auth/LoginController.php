@@ -15,7 +15,6 @@ class LoginController extends Controller
             'email' => 'required|email',
             'password' => 'required',
         ]);
-        \Log::info('Testing log');
         // 尝试登录
         if (Auth::attempt($request->only('email', 'password'))) {
             // 登录成功后重定向到不同的页面，基于用户角色
