@@ -16,8 +16,6 @@ use Inertia\Inertia;
 */
 Route::get('/', [CheckStatusController::class, 'checkStatus'])->name('home');
 
-Route::post('/new', [App\Http\Controllers\Auth\RegisterController::class, 'register'])->name('register');
-
 Route::middleware('auth')->group(function () {
     Route::get('/student', function () {
         return  Inertia::render('Student');
@@ -34,7 +32,10 @@ Route::middleware('auth')->group(function () {
 
 Route::post('/login', [App\Http\Controllers\Auth\LoginController::class, 'redirectTo'])->name('login');
 
-Route::post('/new', [App\Http\Controllers\Auth\RegisterController::class, 'register'])->name('new');
+Route::post('/logout', function () {
+    Auth::logout();
+    return Inertia::location('/');
+})->name('logout');
 
 Route::get('/register', function () {
     return Inertia::render('Register');

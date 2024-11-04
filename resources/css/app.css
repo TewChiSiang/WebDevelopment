@@ -3,3 +3,10 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.body-background {
+    background-image: url('C:/laragon/www/WebDevelopment/public/Images/bg-sc.png'); /* 替换为你的背景图片路径 */
+    background-size: cover; /* 让背景图像覆盖整个元素 */
+    background-position: center; /* 居中背景图像 */
+    height: 100vh; /* 设置高度 */
+}

@@ -22,7 +22,7 @@ const Home = () => {
   };
 
   return (
-    <div>
+    <div className="body-background">
       <h1 className="tw-text-center">AttendEZ</h1>
       <Card>
         <Card.Body>
