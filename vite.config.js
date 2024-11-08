@@ -21,6 +21,10 @@ export default defineConfig({
         }),
         react(),
     ],
+    server: {
+        host: '192.168.1.114', // Bind to all interfaces
+        port: 3000,      // Set your desired port
+    },    
     resolve: {
         alias: {
             vue: 'vue/dist/vue.esm-bundler.js',

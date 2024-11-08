@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\CheckStatusController;
+use App\Http\Controllers\Auth\RegisterController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 /*
@@ -40,3 +41,5 @@ Route::post('/logout', function () {
 Route::get('/register', function () {
     return Inertia::render('Register');
 });
+
+Route::post('/new', [RegisterController::class, 'register']);
