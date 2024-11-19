@@ -3,14 +3,19 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
+use App\Models\Attendance;
+use App\Models\Student;
+use App\Models\Lecture;
+use App\Models\Course;
 use Inertia\Inertia;
+use Illuminate\Http\Request;
 
 class HomeController extends Controller
 {
-    public function index()
+
+    public function __construct()
     {
-        return inertia('Home', [
-            'message' => 'Welcome to the Home page!',
-        ]);
+        $this->middleware('auth');
     }
+    
 }
