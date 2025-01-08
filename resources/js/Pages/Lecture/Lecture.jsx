@@ -1,14 +1,13 @@
 import React from 'react';
-import CustomNavbar from '../components/CustomNavbar';
+import CustomNavbar from '../../components/CustomNavbar';
 import { Container, Row, Col, Card, Button } from 'react-bootstrap';
-import { QrCodeIcon, ClipboardDocumentCheckIcon, AcademicCapIcon } from '@heroicons/react/24/outline';
+import { QrCodeIcon, ClipboardDocumentCheckIcon, AcademicCapIcon, ClockIcon, BookOpenIcon } from '@heroicons/react/24/outline';
 
 const Lecture = ({ auth }) => {
     const userRole = 'lecture';
 
     const handleGenerateQRCode = () => {
-        // 在此添加生成 QR Code 的逻辑或跳转链接
-        window.location.href = '/studentlist';
+        window.location.href = '/qr-attendance';
     };
 
     return (
@@ -44,13 +43,15 @@ const Lecture = ({ auth }) => {
 
                 <Row className="tw-mb-6 tw-space-y-6 md:tw-space-y-0">
                     {[
+                        { title: 'Add Courses', link: '/lecture-addcourse', icon: AcademicCapIcon },
+                        { title: 'Courses Details', link: '/lecture-course-details', icon: BookOpenIcon },
                         { title: 'Student Attendance', link: '/student-attendance', icon: ClipboardDocumentCheckIcon },
-                        { title: 'Enroll Course', link: '/enroll-course', icon: AcademicCapIcon }
+                        { title: 'Time Table', link: '/lecture-time-table', icon: ClockIcon },
                     ].map((item, idx) => (
                         <Col md={6} key={idx}>
                             <Card
-                                className="tw-shadow-lg tw-rounded-lg tw-p-6 tw-bg-white tw-cursor-pointer tw-transition-transform tw-transform hover:tw-scale-105"
-                                onClick={() => window.location.href = item.link} // Action for navigating to page
+                                className="tw-shadow-lg tw-rounded-lg tw-p-6 tw-bg-white tw-cursor-pointer tw-transition-transform tw-transform hover:tw-scale-105 tw-mb-4"
+                                onClick={() => window.location.href = item.link}
                             >
                                 <Card.Body className="tw-flex tw-flex-col tw-items-center tw-text-center">
                                     <item.icon className="tw-h-12 tw-w-12 tw-text-blue-600 tw-mb-4" />

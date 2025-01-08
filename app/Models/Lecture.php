@@ -4,12 +4,14 @@ namespace App\Models;
 
 use DateTimeInterface;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 
 class Lecture extends Model
 {
+    use HasFactory;
 
     public $table = 'lectures';
 
@@ -36,6 +38,11 @@ class Lecture extends Model
 
     public function courses()
     {
-        return $this->hasMany(Course::class);
+        return $this->hasMany(Course::class, 'lecture_id');
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'user_id'); 
     }
 }

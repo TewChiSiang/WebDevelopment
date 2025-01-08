@@ -10,30 +10,41 @@ class LoginController extends Controller
 {
     public function redirectTo(Request $request)
     {
-        $request->validate([
-            'email' => 'required|email',
-            'password' => 'required',
-        ]);
-    
-        if (Auth::attempt($request->only('email', 'password'))) {
-            // Check the user's role after login
-            $roleName = Auth::user()->role->name;
-    
-            if ($roleName === 'admin') {
-                // Directly go to Voyager admin dashboard for admin role
-                return redirect('/admin');
-            } elseif ($roleName === 'student') {
-                return redirect()->route('student');
-            } else {
-                return redirect()->route('lecture');
+        try {
+            $request->validate([
+                'email' => 'required|email',
+                'password' => 'required',
+            ]);
+            
+            $user = \App\Models\User::where('email', $request->email)->first();
+            
+            if (!$user) {
+                return back()->withErrors([
+                    'email' => 'No account found with this email address.'
+                ]);
             }
+
+            // Then attempt authentication
+            if (Auth::attempt($request->only('email', 'password'))) {
+                $roleName = Auth::user()->role->name;
+
+                if ($roleName === 'admin') {
+                    return redirect('/admin');
+                } elseif ($roleName === 'student') {
+                    return redirect()->route('student');
+                } else {
+                    return redirect()->route('lecture');
+                }
+            }
+
+            return back()->withErrors([
+                'password' => 'Incorrect password. Please try again.'
+            ]);
+
+        } catch (\Exception $e) {
+            return back()->withErrors([
+                'email' => 'An error occurred. Please try again later.'
+            ]);
         }
-    
-        return response()->json([
-            'errors' => [
-                'email' => ['Invalid credentials.'],
-            ]
-        ], 422);
     }
-    
 }

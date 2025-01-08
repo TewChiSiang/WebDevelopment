@@ -1,5 +1,5 @@
 import { createInertiaApp } from '@inertiajs/inertia-react';
-import { createRoot } from 'react-dom/client';  // 使用 createRoot 替代 render
+import { createRoot } from 'react-dom/client';  
 import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
 import '../css/app.css'; // Import the Tailwind CSS file
 

@@ -23,9 +23,14 @@ class AppServiceProvider extends ServiceProvider
     {
         Inertia::share([
             'auth' => [
-                'user' => fn () => Auth::user() ? Auth::user()->only('id', 'name', 'email', 'role_id') : null,
+                'user' => fn() => Auth::user() ? Auth::user()->only('id', 'name', 'email', 'role_id') : null,
             ],
+            'flash' => function () {
+                return [
+                    'status' => session('status'),
+                    'error' => session('error'),
+                ];
+            },
         ]);
     }
-
 }

@@ -23,6 +23,6 @@ class CheckStatusController extends Controller
             }
         }
         
-        return Inertia::render('Home');
+        return Inertia::render('Login');
     }
 }

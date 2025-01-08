@@ -1,10 +1,11 @@
-import React, { useState, useEffect} from 'react';
-import CustomNavbar from '../components/CustomNavbar';
+import React, { useState, useEffect } from 'react';
+import CustomNavbar from '../../components/CustomNavbar';
 import { Container, Row, Col, Card, Alert, Button } from 'react-bootstrap';
 import QrReader from 'react-qr-scanner';
 import { MdQrCodeScanner, MdStop } from 'react-icons/md';
 import { FaCalendarAlt, FaChalkboardTeacher, FaRegClock } from 'react-icons/fa';
 import { FaCameraRotate } from "react-icons/fa6";
+import { FiBookOpen } from "react-icons/fi";
 import axios from 'axios';
 
 const Student = ({ auth }) => {
@@ -14,6 +15,46 @@ const Student = ({ auth }) => {
   const [scannerActive, setScannerActive] = useState(false);
   const [cameraFacingMode, setCameraFacingMode] = useState('environment');
   const [isProcessing, setIsProcessing] = useState(false);
+  const [enrolledClasses, setEnrolledClasses] = useState(0);
+  const [attendanceRate, setAttendanceRate] = useState(0);
+  const [isLoading, setIsLoading] = useState(true);
+  // const [attendanceStatus, setAttendanceStatus] = useState(null);
+
+  // const fetchAttendanceStatus = async () => {
+  //   try {
+  //     const response = await axios.get('/api/attendance-status/${sessionId}', {
+  //       params: { studentId: auth.user.id }
+  //     });
+  //     setAttendanceStatus(response.data);
+  //   } catch (error) {
+  //     console.error('Error fetching attendance status:', error.message);
+  //   }
+  // };
+  
+
+  useEffect(() => {
+    const fetchStudentStats = async () => {
+      try {
+        const response = await axios.get('/api/student-stats', {
+          params: { studentId: auth.user.id }
+        });
+
+        setEnrolledClasses(response.data.enrolledClassesCount);
+        setAttendanceRate(response.data.attendanceRate);
+      } catch (error) {
+        console.error('Error fetching student stats:', error);
+        // Set default values in case of error
+        setEnrolledClasses(0);
+        setAttendanceRate(0);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    
+
+    fetchStudentStats();
+  }, [auth.user.id]);
 
   const handleScan = async (data) => {
     if (data && !isProcessing) {
@@ -41,7 +82,7 @@ const Student = ({ auth }) => {
         const expirationTime = new Date(qrData.expiresAt);
         const currentTime = new Date();
         if (currentTime > expirationTime) {
-          throw new Error('QR code has expired. Please scan a new qr code.');
+          throw new Error('QR code has expired. Please scan a new QR code.');
         }
 
         const malaysiaTime = new Date(new Date().toLocaleString('en-US', { timeZone: 'Asia/Kuala_Lumpur' }));
@@ -57,6 +98,7 @@ const Student = ({ auth }) => {
         });
 
         if (response.data.success) {
+          // await fetchAttendanceStatus();
           setScanResult({
             message: 'Attendance marked successfully!',
             course: qrData.courseName,
@@ -81,17 +123,17 @@ const Student = ({ auth }) => {
     setScanError('Error accessing the camera or scanning QR code.');
   };
 
-  const toggleScanner = () => {
-    setScannerActive(!scannerActive);
-    setScanResult(null);
-    setScanError(null);
-  };
+  // const toggleScanner = () => {
+  //   setScannerActive(!scannerActive);
+  //   setScanResult(null);
+  //   setScanError(null);
+  // };
 
-  const toggleCamera = () => {
-    setCameraFacingMode((prevMode) =>
-      prevMode === 'environment' ? 'user' : 'environment'
-    );
-  };
+  // const toggleCamera = () => {
+  //   setCameraFacingMode((prevMode) =>
+  //     prevMode === 'environment' ? 'user' : 'environment'
+  //   );
+  // };
 
   return (
     <div className="tw-bg-gradient-to-b tw-from-blue-50 tw-to-blue-100 tw-min-h-screen">
@@ -105,9 +147,14 @@ const Student = ({ auth }) => {
               <h2 className="tw-text-xl tw-font-bold tw-text-gray-700">
                 Welcome, {auth.user.name}!
               </h2>
-              <p className="tw-text-gray-500">
-                You have enrolled in 3 classes. Your attendance rate is 90%.
-              </p>
+              {isLoading ? (
+                <p className="tw-text-gray-500">Loading your stats...</p>
+              ) : (
+                <p className="tw-text-gray-500">
+                  You have enrolled in {enrolledClasses} {enrolledClasses === 1 ? 'class' : 'classes'}.
+                  Your attendance rate is {attendanceRate}%.
+                </p>
+              )}
             </Card.Body>
           </Card>
         </div>
@@ -217,20 +264,30 @@ const Student = ({ auth }) => {
         <Row className="tw-mb-6 tw-space-y-6 md:tw-space-y-0">
           {[
             {
+              title: 'Enroll Courses',
+              link: '/student-enrollcourse',
+              icon: <FaChalkboardTeacher className="tw-h-10 tw-w-10 tw-text-blue-600 tw-mb-4" />,
+            },
+            {
+              title: 'Courses Details',
+              link: '/student-course-details',
+              icon: <FiBookOpen className="tw-h-10 tw-w-10 tw-text-blue-600 tw-mb-4" />,
+            },
+            {
               title: 'My Attendance',
-              link: '/attendance',
+              link: '/my-attendance',
               icon: <FaCalendarAlt className="tw-h-10 tw-w-10 tw-text-blue-600 tw-mb-4" />,
             },
             {
-              title: 'Enroll Classes',
-              link: '/enroll-classes',
-              icon: <FaChalkboardTeacher className="tw-h-10 tw-w-10 tw-text-blue-600 tw-mb-4" />,
+              title: 'Time table',
+              link: '/student-time-table',
+              icon: <FaRegClock className="tw-h-10 tw-w-10 tw-text-blue-600 tw-mb-4" />,
             },
 
           ].map((item, idx) => (
             <Col md={6} key={idx}>
               <Card
-                className="tw-shadow-lg tw-rounded-lg tw-p-6 tw-bg-white tw-cursor-pointer tw-transition-transform tw-transform hover:tw-scale-105"
+                className="tw-shadow-lg tw-rounded-lg tw-p-6 tw-bg-white tw-cursor-pointer tw-transition-transform tw-transform hover:tw-scale-105 tw-mb-4"
                 onClick={() => (window.location.href = item.link)}
               >
                 <Card.Body className="tw-flex tw-flex-col tw-items-center tw-text-center">
@@ -240,17 +297,6 @@ const Student = ({ auth }) => {
               </Card>
             </Col>
           ))}
-          <Col md={12}>
-            <Card
-              className="tw-mt-4 tw-shadow-lg tw-rounded-lg tw-p-6 tw-bg-white tw-cursor-pointer tw-transition-transform tw-transform hover:tw-scale-105"
-              onClick={() => (window.location.href = '/time-table')}
-            >
-              <Card.Body className="tw-flex tw-flex-col tw-items-center tw-text-center">
-                <FaRegClock className="tw-h-10 tw-w-10 tw-text-blue-600 tw-mb-4" />
-                <h3 className="tw-text-gray-600 tw-text-lg tw-font-semibold">Timetable</h3>
-              </Card.Body>
-            </Card>
-          </Col>
         </Row>
       </Container>
     </div>

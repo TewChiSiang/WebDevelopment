@@ -26,7 +26,8 @@ export default defineConfig({
         react(),
     ],
     server: {
-        host: '192.168.0.100',
+        host: '192.168.0.115',
+        //172.20.10.4
         port: 3000,
         // https: {
         //     key: fs.readFileSync(path.resolve('C:/laragon/etc/ssl/laragon.key')), // Path to your SSL key file

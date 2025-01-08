@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { Menu, X, User, Settings, LogOut, ChevronDown } from 'lucide-react';
+import { Menu, X, User, LogOut, ChevronDown } from 'lucide-react';
+import { FaUserGraduate } from "react-icons/fa";
 import { Inertia } from '@inertiajs/inertia';
 import { AcademicCapIcon } from '@heroicons/react/24/outline';
 
@@ -36,7 +37,11 @@ const CustomNavbar = ({ userRole, user }) => {
                 onClick={toggleDropdown}
                 className="tw-flex tw-items-center tw-px-4 tw-py-2 tw-text-gray-700 hover:tw-text-blue-600 tw-rounded-lg hover:tw-bg-gray-50 tw-transition-colors tw-duration-150"
               >
-                <User className="tw-w-5 tw-h-5 tw-mr-2" />
+                {userRole === 'student' ? (
+                  <User className="tw-w-5 tw-h-5 tw-mr-2" />
+                ) : (
+                  <FaUserGraduate className="tw-w-4 tw-h-4 tw-mr-2" />
+                )}
                 <span className="tw-mr-1">{user.name}</span>
                 <ChevronDown className="tw-w-4 tw-h-4" />
               </button>
@@ -45,10 +50,14 @@ const CustomNavbar = ({ userRole, user }) => {
               {showDropdown && (
                 <div className="tw-absolute tw-right-0 tw-mt-2 tw-w-48 tw-bg-white tw-rounded-lg tw-shadow-lg tw-py-1 tw-z-50">
                   <a
-                    href="#profile"
+                    href={userRole === 'student' ? '/student-profile' : '/lecture-profile'}
                     className="tw-flex tw-items-center tw-px-4 tw-py-2 tw-text-gray-700 hover:tw-bg-gray-50 tw-no-underline"
                   >
-                    <User className="tw-w-4 tw-h-4 tw-mr-2" />
+                    {userRole === 'student' ? (
+                      <User className="tw-w-5 tw-h-5 tw-mr-2" />
+                    ) : (
+                      <FaUserGraduate className="tw-w-4 tw-h-4 tw-mr-2" />
+                    )}
                     Profile
                   </a>
                   <div className="tw-border-t tw-border-gray-100"></div>
@@ -86,7 +95,7 @@ const CustomNavbar = ({ userRole, user }) => {
           <div className="tw-px-2 tw-pt-2 tw-pb-3 tw-space-y-1">
             <div className="tw-flex tw-flex-col tw-space-y-2">
               <a
-                href="#profile"
+               href={userRole === 'student' ? '/student-profile' : '/lecture-profile'}
                 className="tw-flex tw-items-center tw-px-4 tw-py-2 tw-text-gray-700 hover:tw-bg-gray-50 tw-rounded-lg tw-no-underline"
               >
                 <User className="tw-w-5 tw-h-5 tw-mr-2" />
@@ -106,7 +115,7 @@ const CustomNavbar = ({ userRole, user }) => {
 
       {/* Overlay for dropdown */}
       {showDropdown && (
-        <div 
+        <div
           className="tw-fixed tw-inset-0 tw-z-40"
           onClick={() => setShowDropdown(false)}
         />

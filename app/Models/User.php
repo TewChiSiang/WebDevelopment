@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
+use App\Notifications\ResetPasswordNotification;
 
 class User extends \TCG\Voyager\Models\User
 {
@@ -47,5 +48,17 @@ class User extends \TCG\Voyager\Models\User
     public function student()
     {
         return $this->hasOne(Student::class, 'user_id');
+    }
+
+    public function lecture()
+    {
+        return $this->hasOne(Lecture::class, 'user_id');
+    }
+
+
+
+    public function sendPasswordResetNotification($token)
+    {
+        $this->notify(new ResetPasswordNotification($token));
     }
 }

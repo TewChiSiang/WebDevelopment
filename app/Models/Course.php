@@ -23,7 +23,9 @@ class Course extends Model
         'id',
         'course_id',
         'course_name',
-        'course_time',
+        'course_start_time',
+        'course_end_time',
+        'weekday',
         'lecture_id',
         'created_at',
         'updated_at',
@@ -43,7 +45,7 @@ class Course extends Model
 
     public function lecture()
     {
-        return $this->belongsTo(Lecture::class);
+        return $this->belongsTo(Lecture::class, 'lecture_id');
     }
 
     public function attendances()
